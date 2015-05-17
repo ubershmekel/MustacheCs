@@ -1,6 +1,6 @@
-# mustache.cs - Logic-less {{mustache}} templates with C# and compatible with Mustache.js
+# Mustache.cs - Logic-less {{mustache}} templates with C# and compatible with Mustache.js
 
-This is basically a port of [mustache.js](https://github.com/janl/mustache.js) to C#.
+This is basically a port of [mustache.js](https://github.com/janl/mustache.js) to C#. It's important to use a compatible version if you want to template on both server and client side.
 
 > What could be more logical awesome than no logic at all?
 

@@ -367,11 +367,39 @@ namespace Mustache
 
 
         public static object GetGenericValue(object obj, string keyName) {
+            // obj.mykey()
             var type = obj.GetType();
             var method = type.GetMethod(keyName);
             if (method != null)
                 return method.Invoke(obj, null);
-            return type.GetProperty(keyName).GetValue(obj, null);
+
+            // obj.mykey (getter)
+            var prop = type.GetProperty(keyName);
+            if (prop != null)
+                return prop.GetValue(obj, null);
+
+            // obj.mykey (member)
+            var field = type.GetField(keyName);
+            if (field != null)
+                return member.GetValue(obj);
+
+            // dict["mykey"]
+            //var dict = obj as IDictionary<string, Object>;
+            //if (dict != null)
+            //    return dict.Get[keyName];
+            method = type.GetMethod("ContainsKey");
+            if (method != null) {
+                object[] parametersArray = new object[] { keyName };
+                var containsKey = (bool)method.Invoke(obj, parametersArray);
+                if (containsKey) {
+                    method = type.GetMethod("get_Item");
+                    if (method != null)
+                    {
+                        return method.Invoke(obj, parametersArray);
+                    }
+                }
+            }
+            return null;
         }
 
 
@@ -469,8 +497,8 @@ namespace Mustache
 
                 //if (isFunction(value))
                 // TODO
-                if(value.GetType().ToString() == "invoke")
-                    value = "";//Invoke(value.call(this.view);
+                //if(value.GetType().ToString() == "invoke")
+                //    value = "";//Invoke(value.call(this.view);
 
                 return value;
             }

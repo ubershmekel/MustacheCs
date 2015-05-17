@@ -2,13 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 using RenderLambdaType = System.Func<string, System.Func<string, string>, string>;
 
 namespace Mustache.Test
 {
-    [TestClass]
+    [TestFixture]
     public class MustacheTests
     {
         private class SubObj
@@ -38,7 +38,7 @@ namespace Mustache.Test
             public int aNumber = 13;
         }
 
-        [TestMethod]
+        [Test]
         public void Tutorial()
         {
             var view = new MyView()
@@ -50,7 +50,7 @@ namespace Mustache.Test
             Assert.AreEqual("Joe spends 6", output);
         }
 
-        [TestMethod]
+        [Test]
         public void Unescape()
         {
             var expected = @"* Chris
@@ -72,7 +72,7 @@ namespace Mustache.Test
             Assert.AreEqual(expected, output);
         }
 
-        [TestMethod]
+        [Test]
         public void DotNotation()
         {
             var view = new MyView()
@@ -83,7 +83,7 @@ namespace Mustache.Test
             Assert.AreEqual("Joe believes life is 42", output);
         }
 
-        [TestMethod]
+        [Test]
         public void Sections()
         {
             var view = new MyView()
@@ -100,7 +100,7 @@ namespace Mustache.Test
             Assert.AreEqual("Shown.", output);
         }
 
-        [TestMethod]
+        [Test]
         public void NonEmptyLists()
         {
             var view = new MyView()
@@ -122,7 +122,7 @@ namespace Mustache.Test
             Assert.AreEqual("=-ABC-XYZ", output);
         }
 
-        [TestMethod]
+        [Test]
         public void Lambdas()
         {
             var template = @"{{#wrapped}} {{title}} is awesome. {{/wrapped}}";
@@ -134,7 +134,7 @@ namespace Mustache.Test
             Assert.AreEqual("<b> Willy is awesome. </b>", output);
         }
 
-        [TestMethod]
+        [Test]
         public void Numbers()
         {
             var view = new MyView();

@@ -47,7 +47,8 @@ namespace Mustache
         }
 
         private static bool isArray(Object obj) {
-            return obj is System.Collections.IList;
+            //return obj is System.Collections.IList;
+            return obj is IEnumerable<Object>;
         }
 
         private static bool isEmptyArray(Object obj) {
@@ -618,7 +619,11 @@ namespace Mustache
                     return ""; // this would have returned null/undefined instead of a string in JS version?
 
                 //if (isArray(value)) {
-                if(isArray(value)) {
+                // TODO: HORRIBLE HACK to differentiate JObject and iterables.
+                if ((value.GetType().ToString().Contains("JObject")))
+                {
+                    buffer += this.renderTokens(token.subTokens, context.push(value), partials, originalTemplate);
+                } else if(isArray(value)) {
                     foreach (var item in (System.Collections.IList)value) {
                         buffer += this.renderTokens(token.subTokens, context.push(item), partials, originalTemplate);
                     }
@@ -633,9 +638,8 @@ namespace Mustache
                     if (value != null)
                         buffer += value;
 
-                }
-                else if (value is dynamic) {
-                    buffer += this.renderTokens(token.subTokens, context.push(value), partials, originalTemplate);
+                //} else if (value as dynamic != null) {
+                //    buffer += this.renderTokens(token.subTokens, context.push(value), partials, originalTemplate);
                 } else {
                     buffer += this.renderTokens(token.subTokens, context, partials, originalTemplate);
                 }

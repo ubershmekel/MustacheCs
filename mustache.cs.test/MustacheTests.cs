@@ -145,7 +145,7 @@ namespace Mustache.Test
         [Test]
         public void DynamicJson()
         {
-            dynamic data = System.Web.Helpers.Json.Decode("{'person?': { 'name': 'Jon' }}");
+            dynamic data = Newtonsoft.Json.JsonConvert.DeserializeObject("{'person?': { 'name': 'Jon' }}");
             var output = Mustache.render("{{#person?}}Hi {{name}}!{{/person?}}", data);
             Assert.AreEqual("Hi Jon!", output);
         }

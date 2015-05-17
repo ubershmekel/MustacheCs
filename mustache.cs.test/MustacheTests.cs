@@ -141,5 +141,13 @@ namespace Mustache.Test
             var output = Mustache.render("{{aNumber}} believes", view);
             Assert.AreEqual("13 believes", output);
         }
+
+        [Test]
+        public void DynamicJson()
+        {
+            dynamic data = System.Web.Helpers.Json.Decode("{'person?': { 'name': 'Jon' }}");
+            var output = Mustache.render("{{#person?}}Hi {{name}}!{{/person?}}", data);
+            Assert.AreEqual("Hi Jon!", output);
+        }
     }
 }

@@ -11,7 +11,7 @@ namespace Mustache
     /// </summary>
     public sealed class Mustache
     {
-        [System.Diagnostics.DebuggerDisplay("Token={value}")]
+        [System.Diagnostics.DebuggerDisplay("type={type} value={value}")]
         public class Token
         {
             public string type { get; set; }
@@ -400,6 +400,19 @@ namespace Mustache
                     }
                 }
             }
+
+            // dynamic.mykey
+            var dyna = obj as dynamic;
+            if (dyna != null)
+            {
+                try
+                {
+                    return dyna[keyName];
+                }
+                catch (KeyNotFoundException) { }
+                catch (Microsoft.CSharp.RuntimeBinder.RuntimeBinderException) { }
+            }
+
             return null;
         }
 
@@ -620,17 +633,9 @@ namespace Mustache
                     if (value != null)
                         buffer += value;
 
-                /* TODO
-                 * } else if (isFunction(value)) {
-                    if (typeof originalTemplate !== 'string')
-                    throw new Error('Cannot use higher-order sections without the original template');
-
-                    // Extract the portion of the original template that the section contains.
-                    value = value.call(context.view, originalTemplate.slice(token[3], token[5]), subRender);
-
-                    if (value != null)
-                    buffer += value;
-                 */
+                }
+                else if (value is dynamic) {
+                    buffer += this.renderTokens(token.subTokens, context.push(value), partials, originalTemplate);
                 } else {
                     buffer += this.renderTokens(token.subTokens, context, partials, originalTemplate);
                 }

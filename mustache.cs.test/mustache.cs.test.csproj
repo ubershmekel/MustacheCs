@@ -10,7 +10,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Mustache.Test</RootNamespace>
-    <AssemblyName>mustache-sharp.test</AssemblyName>
+    <AssemblyName>mustache.cs.test</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -47,9 +47,9 @@
     <Compile Include="MustacheTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\mustache-sharp\mustache-sharp.csproj">
+    <ProjectReference Include="..\mustache.cs\mustache.cs.csproj">
       <Project>{d71b378f-a4ba-4263-a4f0-07a49a0c528d}</Project>
-      <Name>mustache-sharp</Name>
+      <Name>mustache.cs</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

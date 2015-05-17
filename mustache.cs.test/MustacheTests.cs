@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using RenderLambdaType = System.Func<string, System.Func<string, string>, string>;
+
 namespace Mustache.Test
 {
     [TestClass]
@@ -12,6 +14,10 @@ namespace Mustache.Test
         private class SubObj
         {
             public string whatever = "life is 42";
+            public string uppers()
+            {
+                return whatever.ToUpper();
+            }
         }
 
         private class MyView
@@ -25,6 +31,11 @@ namespace Mustache.Test
                 return (2 + 4).ToString();
             }
             public SubObj subber = new SubObj();
+            public List<SubObj> subberList;
+            public RenderLambdaType wrapped() {
+                return (string text, Func<string, string> render) => "<b>" + render(text) + "</b>";
+            }
+            public int aNumber = 13;
         }
 
         [TestMethod]
@@ -87,6 +98,48 @@ namespace Mustache.Test
 
             output = Mustache.render("Shown.{{#stoogesArray}}Never shown!{{/stoogesArray}}", view);
             Assert.AreEqual("Shown.", output);
+        }
+
+        [TestMethod]
+        public void NonEmptyLists()
+        {
+            var view = new MyView()
+            {
+                stooges = new List<string>{"Moe", "Larry", "Curly"},
+            };
+            var output = Mustache.render("Shown{{#stooges}} {{.}}{{/stooges}}", view);
+            Assert.AreEqual("Shown Moe Larry Curly", output);
+
+            var context = new MyView()
+            {
+                subberList = new List<SubObj> { new SubObj { whatever = "abc" }, new SubObj { whatever = "xyz" } }
+            };
+            
+            output = Mustache.render("={{#subberList}}-{{whatever}}{{/subberList}}", context);
+            Assert.AreEqual("=-abc-xyz", output);
+            
+            output = Mustache.render("={{#subberList}}-{{uppers}}{{/subberList}}", context);
+            Assert.AreEqual("=-ABC-XYZ", output);
+        }
+
+        [TestMethod]
+        public void Lambdas()
+        {
+            var template = @"{{#wrapped}} {{title}} is awesome. {{/wrapped}}";
+            var view = new MyView()
+            {
+                title = "Willy"
+            };
+            var output = Mustache.render(template, view);
+            Assert.AreEqual("<b> Willy is awesome. </b>", output);
+        }
+
+        [TestMethod]
+        public void Numbers()
+        {
+            var view = new MyView();
+            var output = Mustache.render("{{aNumber}} believes", view);
+            Assert.AreEqual("13 believes", output);
         }
     }
 }

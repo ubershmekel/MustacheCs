@@ -12,14 +12,15 @@ namespace Mustache
     /// </summary>
     public sealed class Mustache
     {
+        [System.Diagnostics.DebuggerDisplay("Token={value}")]
         public class Token
         {
             public string type { get; set; }
             public string value { get; set; }
-            public long start { get; set; }
-            public long end { get; set; }
+            public int start { get; set; }
+            public int end { get; set; }
             public List<Token> subTokens { get; set; }
-            public long endSection { get; set; }
+            public int endSection { get; set; }
         }
 
         public class Tags
@@ -74,7 +75,7 @@ namespace Mustache
         private class Scanner {
             public string _text;
             public string _tail;
-            public long _pos;
+            public int _pos;
 
             public Scanner(string text) {
                 _text = text;
@@ -205,11 +206,12 @@ namespace Mustache
             else
                 compileTags(tags);
 
-            long start = 0;
+            int start;
             //var start, type, value, chr, token, openSection;
             var scanner = new Scanner(template);
             Token openSection = null;
             while (!scanner.eos()) {
+                start = scanner._pos;
                 var value = scanner.scanUntil(openingTagRe);
                 var valueLength = value.Count();
                 if (valueLength > 0) {
@@ -610,6 +612,15 @@ namespace Mustache
                     }
                 //} else if (typeof value === 'object' || typeof value === 'string' || typeof value === 'number') {
                 //    buffer += this.renderTokens(token[4], context.push(value), partials, originalTemplate);
+                } else if (value is System.Func<string, System.Func<string, string>, string>) {
+                    System.Func<string, System.Func<string, string>, string> lambda = value as System.Func<string, System.Func<string, string>, string>;
+                    //value = lambda(context._view, originalTemplate.Substring(token.end, token.endSection), subRender);
+                    // TODO: how do we set the "this" in c#? Do we care?
+                    value = lambda(originalTemplate.Substring(token.end, token.endSection - token.end), subRender);
+
+                    if (value != null)
+                        buffer += value;
+
                 /* TODO
                  * } else if (isFunction(value)) {
                     if (typeof originalTemplate !== 'string')
@@ -660,7 +671,7 @@ namespace Mustache
             string escapedValue (Token token, Context context) {
                 var value = context.lookup(token.value);
                 if (value != null)
-                    return System.Security.SecurityElement.Escape((string)value);
+                    return System.Security.SecurityElement.Escape(value.ToString());
                 return null;
             }
 

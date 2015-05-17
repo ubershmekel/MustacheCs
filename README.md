@@ -1,222 +1,567 @@
-# mustache#
+# mustache.cs - Logic-less {{mustache}} templates with C# and compatible with Mustache.js
 
-An extension of the mustache text template engine for .NET.
+This is basically a port of [mustache.js](https://github.com/janl/mustache.js) to C#.
 
-Download using NuGet: [mustache#](http://nuget.org/packages/mustache-sharp)
+> What could be more logical awesome than no logic at all?
 
-## Overview
-Generating text has always been a chore. Either you're concatenating strings like a mad man or you're getting fancy with `StringBuilder`. Either way, the logic for conditionally including values or looping over a collection really obscures the intention of the code. A more declarative approach would improve your code big time. Hey, that's why server-side scripting got popular in the first place, right?
+[![Build Status](https://travis-ci.org/ubershmekel/mustache.cs.svg)](https://travis-ci.org/ubershmekel/mustache.cs)
 
-[mustache](http://mustache.github.com/) is a really simple tool for generating text. .NET developers already had access to `String.Format` to accomplish pretty much the same thing. The only problem was that `String.Format` used indexes for placeholders: `Hello, {0}!!!`. **mustache** let you use meaningful names for placeholders: `Hello, {{name}}!!!`.
+[mustache.js](http://github.com/janl/mustache.js) is an implementation of the [mustache](http://mustache.github.com/) template system in JavaScript.
 
-**mustache** is a logic-less text generator. However, almost every time I've ever needed to generate text I needed to turn some of it on or off depending on a value. Not having the ability to turn things off usually meant going back to building my text in parts.
+[Mustache](http://mustache.github.io/) is a logic-less template syntax. It can be used for HTML, config files, source code - anything. It works by expanding tags in a template using values provided in a hash or object.
 
-Introducing [handlebars.js](http://handlebarsjs.com/)... If you've needed to generate any HTML templates, **handlebars.js** is a really awesome tool. Not only does it support an `if` and `each` tag, it lets you define your own tags! It also makes it easy to reference nested values `{{Customer.Address.ZipCode}}`.
+We call it "logic-less" because there are no if statements, else clauses, or for loops. Instead there are only tags. Some tags are replaced with a value, some nothing, and others a series of values.
 
-**mustache#** brings the power of **handlebars.js** to .NET and then takes it a little bit further. It is geared towards building ordinary text documents, rather than just HTML. It differs from **handlebars.js** in the way it handles newlines. With **mustache#**, you explicitly indicate when you want newlines - actual newlines are ignored.
+For a language-agnostic overview of mustache's template syntax, see the `mustache(5)` [manpage](http://mustache.github.com/mustache.5.html).
 
-    Hello, {{Customer.Name}}
-    {{#newline}}
-    {{#newline}}
-    {{#with Order}}
-    {{#if LineItems}}
-    Here is a summary of your previous order:
-    {{#newline}}
-    {{#newline}}
-    {{#each LineItems}}
-        {{ProductName}}: {{UnitPrice:C}} x {{Quantity}}
-        {{#newline}}
-    {{/each}}
-    {{#newline}}
-    Your total was {{Total:C}}.
-    {{#else}}
-    You do not have any recent purchases.
-    {{/if}}
-    {{/with}}
-    
-Most of the lines in the previous example will never appear in the final output. This allows you to use **mustache#** to write templates for normal text, not just HTML/XML.
+## Where to use mustache.cs?
 
-## Placeholders
-The placeholders can be any valid identifier. These map to the property names in your classes.
+You can use mustache.cs to render mustache templates anywhere you can use C#. Use mustache.js if you need browser-side rendering.
 
-### Formatting Placeholders
-Each format item takes the following form and consists of the following components:
 
-    {{identifier[,alignment][:formatString]}}
+## Who uses mustache.js?
 
-The matching braces are required. Notice that they are double curly braces! The alignment and the format strings are optional and match the syntax accepted by `String.Format`. Refer to [String.Format](http://msdn.microsoft.com/en-us/library/system.string.format.aspx)'s documentation to learn more about the standard and custom format strings.
+An updated list of mustache.js users is kept [on the Github wiki](http://wiki.github.com/ubershmekel/mustache.cs/who-uses). Add yourself or your company if you use mustache.cs!
 
-### Placeholder Scope
-The identifier is used to find a property with a matching name. If you want to print out the object itself, you can use the special identifier `this`.
+## Contributing
 
-    FormatCompiler compiler = new FormatCompiler();
-    Generator generator = compiler.Compile("Hello, {{this}}!!!");
-    string result = generator.Render("Bob");
-    Console.Out.WriteLine(result);  // Hello, Bob!!!
-    
-Some tags, such as `each` and `with`, change which object the values will be retrieved from.
+mustache.cs was born in 2015. You can help out! There is [plenty](https://github.com/ubershmekel/mustache.cs/issues) of [work](https://github.com/ubershmekel/mustache.cs/pulls) to do. No big commitment required, if all you do is review a single [Pull Request](https://github.com/ubershmekel/mustache.cs/pulls), you are a maintainer. And a hero.
 
-If a property with the placeholder name can't be found at the current scope, the name will be searched for at the next highest level.
+### Your First Contribution
 
-**mustache#** will automatically detect when an object is a dictionary and search for a matching key. In this case, it still needs to be a valid identifier name.
+- review a [Pull Request](https://github.com/ubershmekel/mustache.cs/pulls)
+- fix an [Issue](https://github.com/ubershmekel/mustache.cs/issues)
+- update the [documentation](https://github.com/ubershmekel/mustache.cs#usage)
+- make a website
+- write a tutorial
 
-### Nested Placeholders
-If you want to grab a nested property, you can separate identifiers using `.`.
+* * *
 
-    {{Customer.Address.ZipCode}}
+## Usage
 
-## The 'if' tag
-The **if** tag allows you to conditionally include a block of text.
+Below is quick example how to use mustache.cs:
 
-    Hello{{#if Name}}, {{Name}}{{/if}}!!!
+```cs
+class view = {
+  string title = "Joe";
+  string calc() {
+    return 2 + 4;
+  }
+}
 
-The block will be printed if:
-* The value is a non-empty string.
-* The value is a non-empty collection.
-* The value isn't the NUL char.
-* The value is a non-zero number.
-* The value evaluates to true.
+var output = Mustache.render("{{title}} spends {{calc}}", new view());
+```
 
-The **if** tag has complimentary **elif** and **else** tags. There can be as many **elif** tags as desired but the **else** tag must appear only once and after all other tags.
+In this example, the `Mustache.render` function takes two parameters: 1) the [mustache](http://mustache.github.com/) template and 2) a `view` object that contains the data and code needed to render the template.
 
-    {{#if Male}}Mr.{{#elif Married}}Mrs.{{#else}}Ms.{{/if}}
 
-## The 'each' tag
-If you need to print out a block of text for each item in a collection, use the **each** tag.
+--------------
+Below has not yet been converted from mustache.js to mustache.cs
+--------------
 
-    {{#each Customers}}
-    Hello, {{Name}}!!
-    {{/each}}
-    
-Within the context of the **each** block, the scope changes to the current item. So, in the example above, `Name` would refer to a property in the `Customer` class.
+## Templates
 
-Additionally, you can access the current index into the collection being enumerated using the **index** tag.
+A [mustache](http://mustache.github.com/) template is a string that contains any number of mustache tags. Tags are indicated by the double mustaches that surround them. `{{person}}` is a tag, as is `{{#person}}`. In both examples we refer to `person` as the tag's key. There are several types of tags available in mustache.js, described below.
 
-    <ul>
-    {{#each Items}}
-        <li class="list-item{{#index}}" value="{{Value}}">{{Description}}</li>
-    {{/each}}
-    </ul>
-    
-This will build an HTML list, building a list of items with `Description` and `Value` properties. Additionally, the `index` tag is used to create a CSS class with increasing numbers.
-    
-## The 'with' tag
-Within a block of text, you may refer to a same top-level placeholder over and over. You can cut down the amount of text by using the **with** tag.
+There are several techniques that can be used to load templates and hand them to mustache.js, here are two of them:
 
-    {{#with Customer.Address}}
-    {{FirstName}} {{LastName}}
-    {{Line1}}
-    {{#if Line2}}
-    {{Line2}}
-    {{/if}}
-    {{#if Line3}}
-    {{Line3}}
-    {{/if}}
-    {{City}} {{State}}, {{ZipCode}}
-    {{/with}}
-    
-Here, the `Customer.Address` property will be searched first for the placeholders. If a property cannot be found in the `Address` object, it will be searched for in the `Customer` object and on up.
+#### Include Templates
 
-## The 'set' tag
-**mustache#** provides limited support for variables through use of the `set` tag. Once a variable is declared, it is visible to all child scopes. Multiple definitions of a variable with the same name cannot be created within the same scope. In fact, I highly recommend making variable names unique to the entire template just to prevent unexpected behavior!
+If you need a template for a dynamic part in a static website, you can consider including the template in the static HTML file to avoid loading templates separately. Here's a small example using `jQuery`:
 
-The following example will print out "EvenOddEvenOdd" by toggling a variable called `even`:
+```html
+<html>
+<body onload="loadUser">
+<div id="target">Loading...</div>
+<script id="template" type="x-tmpl-mustache">
+Hello {{ name }}!
+</script>
+</body>
+</html>
+```
 
-    FormatCompiler compiler = new FormatCompiler();
-    const string format = @"{{#set even}}
-    {{#each this}}
-    {{#if @even}}
-    Even
-    {{#else}}
-    Odd
-    {{/if}}
-    {{#set even}}
-    {{/each}}";
-    Generator generator = compiler.Compile(format);
-    generator.ValueRequested += (sender, e) =>
-    {
-        e.Value = !(bool)(e.Value ?? false);
-    };
-    string result = generator.Render(new int[] { 0, 1, 2, 3 });
-    
-This code works by specifying a function to call whenever a value is needed for the `even` variable. The first time the function is called, `e.Value` will be null. All additional calls will hold the last known value of the variable.
+```js
+function loadUser() {
+  var template = $('#template').html();
+  Mustache.parse(template);   // optional, speeds up future uses
+  var rendered = Mustache.render(template, {name: "Luke"});
+  $('#target').html(rendered);
+}
+```
 
-Notice that when you set the variable, you don't qualify it with an `@`. You only need the `@` when you request its value, like in the `if` statement above.
-    
-You should attempt to limit your use of variables within templates. Instead, perform as many up-front calculations as possible and make sure your view model closely represents its final appearance. In this case, it would make more sense to first convert the array into strings of "Even" and "Odd".
+#### Load External Templates
 
-    FormatCompiler compiler = new FormatCompiler();
-    const string format = @"{{#each this}}{{this}}{{/each}}";
-    Generator generator = compiler.Compile(format);
-    string result = generator.Render(new string[] { "Even", "Odd", "Even", "Odd" });
+If your templates reside in individual files, you can load them asynchronously and render them when they arrive. Another example using `jQuery`:
 
-This code is much easier to read and understand. It is also going to run significantly faster. In cases where you also need the original value, you can create an array containing objects with properties for the original value *and* `Even`/`Odd`.
+```js
+function loadUser() {
+  $.get('template.mst', function(template) {
+    var rendered = Mustache.render(template, {name: "Luke"});
+    $('#target').html(rendered);
+  });
+}
+```
 
-## Defining Your Own Tags
-If you need to define your own tags, **mustache#** has everything you need.
+### Variables
 
-Once you define your own tags, you can register them with the compiler using the `RegisterTag` method.
+The most basic tag type is a simple variable. A `{{name}}` tag renders the value of the `name` key in the current context. If there is no such key, nothing is rendered.
 
-    FormatCompiler compiler = new FormatCompiler();
-    compiler.RegisterTag(myTag);
-    
-Your tag can be referenced within the template by leading its name with a `#`.
+All variables are HTML-escaped by default. If you want to render unescaped HTML, use the triple mustache: `{{{name}}}`. You can also use `&` to unescape a variable.
 
-Custom tags can take any number of parameters. Parameters can have default values if you don't want to pass them all the time. Arguments are passed by specifying a placeholder.
+View:
 
-### Multi-line Tags
-Here's an example of a tag that will make all of its content upper case:
+```json
+{
+  "name": "Chris",
+  "company": "<b>GitHub</b>"
+}
+```
 
-    public class UpperTagDefinition : ContentTagDefinition
-    {
-        public UpperTagDefinition()
-            : base("upper")
-        {
-        }
-        
-        public override IEnumerable<NestedContext> GetChildContext(TextWriter writer, KeyScope scope, Dictionary<string, object> arguments)
-        {
-            NestedContext context = new NestedContext() 
-            { 
-                KeyScope = scope, 
-                Writer = new StringWriter(), 
-                WriterNeedsConsolidated = true,
-            };
-            yield return context;
-        }
-        
-        public override string ConsolidateWriter(TextWriter writer, Dictionary<string, object> arguments)
-        {
-            return writer.ToString().ToUpperInvariant();
-        }
+Template:
+
+```html
+* {{name}}
+* {{age}}
+* {{company}}
+* {{{company}}}
+* {{&company}}
+```
+
+Output:
+
+```html
+* Chris
+*
+* &lt;b&gt;GitHub&lt;/b&gt;
+* <b>GitHub</b>
+* <b>GitHub</b>
+```
+
+JavaScript's dot notation may be used to access keys that are properties of objects in a view.
+
+View:
+
+```json
+{
+  "name": {
+    "first": "Michael",
+    "last": "Jackson"
+  },
+  "age": "RIP"
+}
+```
+
+Template:
+
+```html
+* {{name.first}} {{name.last}}
+* {{age}}
+```
+
+Output:
+
+```html
+* Michael Jackson
+* RIP
+```
+
+### Sections
+
+Sections render blocks of text one or more times, depending on the value of the key in the current context.
+
+A section begins with a pound and ends with a slash. That is, `{{#person}}` begins a `person` section, while `{{/person}}` ends it. The text between the two tags is referred to as that section's "block".
+
+The behavior of the section is determined by the value of the key.
+
+#### False Values or Empty Lists
+
+If the `person` key does not exist, or exists and has a value of `null`, `undefined`, `false`, `0`, or `NaN`, or is an empty string or an empty list, the block will not be rendered.
+
+View:
+
+```json
+{
+  "person": false
+}
+```
+
+Template:
+
+```html
+Shown.
+{{#person}}
+Never shown!
+{{/person}}
+```
+
+Output:
+
+```html
+Shown.
+```
+
+#### Non-Empty Lists
+
+If the `person` key exists and is not `null`, `undefined`, or `false`, and is not an empty list the block will be rendered one or more times.
+
+When the value is a list, the block is rendered once for each item in the list. The context of the block is set to the current item in the list for each iteration. In this way we can loop over collections.
+
+View:
+
+```json
+{
+  "stooges": [
+    { "name": "Moe" },
+    { "name": "Larry" },
+    { "name": "Curly" }
+  ]
+}
+```
+
+Template:
+
+```html
+{{#stooges}}
+<b>{{name}}</b>
+{{/stooges}}
+```
+
+Output:
+
+```html
+<b>Moe</b>
+<b>Larry</b>
+<b>Curly</b>
+```
+
+When looping over an array of strings, a `.` can be used to refer to the current item in the list.
+
+View:
+
+```json
+{
+  "musketeers": ["Athos", "Aramis", "Porthos", "D'Artagnan"]
+}
+```
+
+Template:
+
+```html
+{{#musketeers}}
+* {{.}}
+{{/musketeers}}
+```
+
+Output:
+
+```html
+* Athos
+* Aramis
+* Porthos
+* D'Artagnan
+```
+
+If the value of a section variable is a function, it will be called in the context of the current item in the list on each iteration.
+
+View:
+
+```js
+{
+  "beatles": [
+    { "firstName": "John", "lastName": "Lennon" },
+    { "firstName": "Paul", "lastName": "McCartney" },
+    { "firstName": "George", "lastName": "Harrison" },
+    { "firstName": "Ringo", "lastName": "Starr" }
+  ],
+  "name": function () {
+    return this.firstName + " " + this.lastName;
+  }
+}
+```
+
+Template:
+
+```html
+{{#beatles}}
+* {{name}}
+{{/beatles}}
+```
+
+Output:
+
+```html
+* John Lennon
+* Paul McCartney
+* George Harrison
+* Ringo Starr
+```
+
+#### Functions
+
+If the value of a section key is a function, it is called with the section's literal block of text, un-rendered, as its first argument. The second argument is a special rendering function that uses the current view as its view argument. It is called in the context of the current view object.
+
+View:
+
+```js
+{
+  "name": "Tater",
+  "bold": function () {
+    return function (text, render) {
+      return "<b>" + render(text) + "</b>";
     }
-    
-Another solution is to wrap the given TextWriter with another TextWriter that will change the case of the strings passed to it. This approach requires more work, but would be more efficient. You should attempt to wrap or reuse the text writer passed to the tag.
-    
-### In-line Tags
-Here's an example of a tag that will join the items of a collection:
+  }
+}
+```
 
-    public class JoinTagDefinition : InlineTagDefinition
-    {
-        public JoinTagDefinition()
-            : base("join")
-        {
-        }
-        
-        protected override IEnumerable<TagParameter> GetParameters()
-        {
-            return new TagParameter[] { new TagParameter("collection") };
-        }
-        
-        protected override void GetText(TextWriter writer, Dictionary<string, object> arguments)
-        {
-            IEnumerable collection = (IEnumerable)arguments["collection"];
-            string joined = String.Join(", ", collection.Cast<object>().Select(o => o.ToString()));
-            writer.Write(joined);
-        }
-    }
+Template:
 
-## License
-If you are looking for a license, you won't find one. The software in this project is free, as in "free as air". Feel free to use my software anyway you like. Use it to build up your evil war machine, swindle old people out of their social security or crush the souls of the innocent.
+```html
+{{#bold}}Hi {{name}}.{{/bold}}
+```
 
-I love to hear how people are using my code, so drop me a line. Feel free to contribute any enhancements or documentation you may come up with, but don't feel obligated. I just hope this code makes someone's life just a little bit easier.
+Output:
+
+```html
+<b>Hi Tater.</b>
+```
+
+### Inverted Sections
+
+An inverted section opens with `{{^section}}` instead of `{{#section}}`. The block of an inverted section is rendered only if the value of that section's tag is `null`, `undefined`, `false`, *falsy* or an empty list.
+
+View:
+
+```json
+{
+  "repos": []
+}
+```
+
+Template:
+
+```html
+{{#repos}}<b>{{name}}</b>{{/repos}}
+{{^repos}}No repos :({{/repos}}
+```
+
+Output:
+
+```html
+No repos :(
+```
+
+### Comments
+
+Comments begin with a bang and are ignored. The following template:
+
+```html
+<h1>Today{{! ignore me }}.</h1>
+```
+
+Will render as follows:
+
+```html
+<h1>Today.</h1>
+```
+
+Comments may contain newlines.
+
+### Partials
+
+Partials begin with a greater than sign, like {{> box}}.
+
+Partials are rendered at runtime (as opposed to compile time), so recursive partials are possible. Just avoid infinite loops.
+
+They also inherit the calling context. Whereas in ERB you may have this:
+
+```html+erb
+<%= partial :next_more, :start => start, :size => size %>
+```
+
+Mustache requires only this:
+
+```html
+{{> next_more}}
+```
+
+Why? Because the `next_more.mustache` file will inherit the `size` and `start` variables from the calling context. In this way you may want to think of partials as includes, or template expansion, even though it's not literally true.
+
+For example, this template and partial:
+
+    base.mustache:
+    <h2>Names</h2>
+    {{#names}}
+      {{> user}}
+    {{/names}}
+
+    user.mustache:
+    <strong>{{name}}</strong>
+
+Can be thought of as a single, expanded template:
+
+```html
+<h2>Names</h2>
+{{#names}}
+  <strong>{{name}}</strong>
+{{/names}}
+```
+
+In mustache.js an object of partials may be passed as the third argument to `Mustache.render`. The object should be keyed by the name of the partial, and its value should be the partial text.
+
+```js
+Mustache.render(template, view, {
+  user: userTemplate
+});
+```
+
+### Set Delimiter
+
+Set Delimiter tags start with an equals sign and change the tag delimiters from `{{` and `}}` to custom strings.
+
+Consider the following contrived example:
+
+```
+* {{ default_tags }}
+{{=<% %>=}}
+* <% erb_style_tags %>
+<%={{ }}=%>
+* {{ default_tags_again }}
+```
+
+Here we have a list with three items. The first item uses the default tag style, the second uses ERB style as defined by the Set Delimiter tag, and the third returns to the default style after yet another Set Delimiter declaration.
+
+According to [ctemplates](http://google-ctemplate.googlecode.com/svn/trunk/doc/howto.html), this "is useful for languages like TeX, where double-braces may occur in the text and are awkward to use for markup."
+
+Custom delimiters may not contain whitespace or the equals sign.
+
+## Pre-parsing and Caching Templates
+
+By default, when mustache.js first parses a template it keeps the full parsed token tree in a cache. The next time it sees that same template it skips the parsing step and renders the template much more quickly. If you'd like, you can do this ahead of time using `mustache.parse`.
+
+```js
+Mustache.parse(template);
+
+// Then, sometime later.
+Mustache.render(template, view);
+```
+
+## Plugins for JavaScript Libraries
+
+mustache.js may be built specifically for several different client libraries, including the following:
+
+  - [jQuery](http://jquery.com/)
+  - [MooTools](http://mootools.net/)
+  - [Dojo](http://www.dojotoolkit.org/)
+  - [YUI](http://developer.yahoo.com/yui/)
+  - [qooxdoo](http://qooxdoo.org/)
+
+These may be built using [Rake](http://rake.rubyforge.org/) and one of the following commands:
+
+    $ rake jquery
+    $ rake mootools
+    $ rake dojo
+    $ rake yui3
+    $ rake qooxdoo
+
+## Command line tool
+
+mustache.js is shipped with a node based command line tool. It might be installed as a global tool on your computer to render a mustache template of some kind
+
+```bash
+$ npm install -g mustache
+$ mustache dataView.json myTemplate.mustache > output.html
+
+# also supports stdin
+$ cat dataView.json | mustache - myTemplate.mustache > output.html
+```
+
+or as a package.json `devDependency` in a build process maybe?
+
+```bash
+$ npm install mustache --save-dev
+```
+```json
+{
+  "scripts": {
+    "build": "mustache dataView.json myTemplate.mustache > public/output.html"
+  }
+}
+```
+```bash
+$ npm run build
+```
+
+The command line tool is basically a wrapper around `Mustache.render` so you get all the aformentioned features.
+
+## Testing
+
+In order to run the tests you'll need to install [node](http://nodejs.org/).
+
+You also need to install the sub module containing [Mustache specifications](http://github.com/mustache/spec) in the project root.
+
+    $ git submodule init
+    $ git submodule update
+
+Install dependencies.
+
+    $ npm install
+
+Then run the tests.
+
+    $ npm test
+
+The test suite consists of both unit and integration tests. If a template isn't rendering correctly for you, you can make a test for it by doing the following:
+
+  1. Create a template file named `mytest.mustache` in the `test/_files`
+     directory. Replace `mytest` with the name of your test.
+  2. Create a corresponding view file named `mytest.js` in the same directory.
+     This file should contain a JavaScript object literal enclosed in
+     parentheses. See any of the other view files for an example.
+  3. Create a file with the expected output in `mytest.txt` in the same
+     directory.
+
+Then, you can run the test with:
+
+    $ TEST=mytest npm run test-render
+
+### Browser tests
+
+Browser tests are not included in `npm test` as they run for too long, although they are runned automatically on Travis when merged into master. Run browser tests locally in any browser:
+
+    $ npm run test-browser-local
+
+then point your browser to `http://localhost:8080/__zuul`
+
+### Troubleshooting
+
+#### npm install fails
+
+Ensure to have a recent version of npm installed. While developing this project requires npm with support for `^` version ranges.
+
+    $ npm install -g npm
+
+## Thanks
+
+mustache.js wouldn't kick ass if it weren't for these fine souls:
+
+  * Chris Wanstrath / defunkt
+  * Alexander Lang / langalex
+  * Sebastian Cohnen / tisba
+  * J Chris Anderson / jchris
+  * Tom Robinson / tlrobinson
+  * Aaron Quint / quirkey
+  * Douglas Crockford
+  * Nikita Vasilyev / NV
+  * Elise Wood / glytch
+  * Damien Mathieu / dmathieu
+  * Jakub Kuźma / qoobaa
+  * Will Leinweber / will
+  * dpree
+  * Jason Smith / jhs
+  * Aaron Gibralter / agibralter
+  * Ross Boucher / boucher
+  * Matt Sanford / mzsanford
+  * Ben Cherry / bcherry
+  * Michael Jackson / mjijackson
+  * Phillip Johnsen / phillipj
+  * David da Silva Contín / dasilvacontin

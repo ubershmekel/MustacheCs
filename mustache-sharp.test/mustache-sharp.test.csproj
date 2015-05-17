@@ -43,9 +43,8 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FormatCompilerTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UpcastDictionaryTester.cs" />
+    <Compile Include="MustacheTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\mustache-sharp\mustache-sharp.csproj">

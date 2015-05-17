@@ -47,7 +47,7 @@ namespace Mustache
         }
 
         private static bool isArray(Object obj) {
-            return obj is ICollection<Object>;
+            return obj is System.Collections.IList;
         }
 
         private static bool isEmptyArray(Object obj) {
@@ -483,7 +483,7 @@ namespace Mustache
                         } else if (context._view != null) {
                             value = GetGenericValue(context._view, name);
                             //lookupHit = context.view.hasOwnProperty(name);
-                            lookupHit = value == null;
+                            lookupHit = value != null;
                         }
 
                         if (lookupHit)
@@ -605,7 +605,7 @@ namespace Mustache
 
                 //if (isArray(value)) {
                 if(isArray(value)) {
-                    foreach (var item in (ICollection<Object>)value) {
+                    foreach (var item in (System.Collections.IList)value) {
                         buffer += this.renderTokens(token.subTokens, context.push(item), partials, originalTemplate);
                     }
                 //} else if (typeof value === 'object' || typeof value === 'string' || typeof value === 'number') {

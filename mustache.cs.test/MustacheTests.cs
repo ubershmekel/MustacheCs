@@ -17,6 +17,8 @@ namespace Mustache.Test
         private class MyView
         {
             public bool person = false;
+            public List<string> stooges = new List<string>();
+            public string[] stoogesArray = {};
             public string title { get; set; }
             public string calc()
             {
@@ -78,6 +80,12 @@ namespace Mustache.Test
                 title = "Joe",
             };
             var output = Mustache.render("Shown.{{#person}}Never shown!{{/person}}", view);
+            Assert.AreEqual("Shown.", output);
+
+            output = Mustache.render("Shown.{{#stooges}}Never shown!{{/stooges}}", view);
+            Assert.AreEqual("Shown.", output);
+
+            output = Mustache.render("Shown.{{#stoogesArray}}Never shown!{{/stoogesArray}}", view);
             Assert.AreEqual("Shown.", output);
         }
     }

@@ -381,7 +381,7 @@ namespace Mustache
             // obj.mykey (member)
             var field = type.GetField(keyName);
             if (field != null)
-                return member.GetValue(obj);
+                return field.GetValue(obj);
 
             // dict["mykey"]
             //var dict = obj as IDictionary<string, Object>;
@@ -600,8 +600,8 @@ namespace Mustache
                     return render(template, context, partials);
                 };
 
-                if (value == null)
-                    return ""; // this would have returned null/undefined instead of a string in JS version :/
+                if (value == null || value is bool && !(bool)value)
+                    return ""; // this would have returned null/undefined instead of a string in JS version?
 
                 //if (isArray(value)) {
                 if(isArray(value)) {

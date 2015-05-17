@@ -16,6 +16,7 @@ namespace Mustache.Test
 
         private class MyView
         {
+            public bool person = false;
             public string title { get; set; }
             public string calc()
             {
@@ -67,6 +68,17 @@ namespace Mustache.Test
             };
             var output = Mustache.render("{{title}} believes {{subber.whatever}}", view);
             Assert.AreEqual("Joe believes life is 42", output);
+        }
+
+        [TestMethod]
+        public void Sections()
+        {
+            var view = new MyView()
+            {
+                title = "Joe",
+            };
+            var output = Mustache.render("Shown.{{#person}}Never shown!{{/person}}", view);
+            Assert.AreEqual("Shown.", output);
         }
     }
 }

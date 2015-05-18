@@ -1,6 +1,6 @@
 # MustacheCs - C# logic-less {{mustache}} templates that are compatible with Mustache.js
 
-This is a port of [mustache.js](https://github.com/janl/mustache.js) to C#. An implementation of an implementation of the [mustache](http://mustache.github.com/). A compatible version is useful if you want to template on both server and client side.
+This is a port of [mustache.js](https://github.com/janl/mustache.js) to C#. An implementation of the [mustache](http://mustache.github.com/) template language. A compatible version is useful if you want to template on both server and client side.
 
 > Install [MustacheCs using NuGet package manager](https://www.nuget.org/packages/MustacheCs)
 

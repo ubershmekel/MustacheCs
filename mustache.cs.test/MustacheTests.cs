@@ -173,6 +173,7 @@ namespace Mustache.Test
         {
             string baseTemplate = @"<h2>Names</h2>{{#names}}  {{> user}}{{/names}}";
             var partials = new Dictionary<string,string>() {{"user" , "<strong>{{name}}</strong>"}};
+
             string fullTemplate = "<h2>Names</h2>{{#names}}  <strong>{{name}}</strong>{{/names}}";
 
             dynamic data = Newtonsoft.Json.JsonConvert.DeserializeObject("{ 'names': [{name: 'Moe'}, {name:'Homer'}]}");
@@ -180,6 +181,23 @@ namespace Mustache.Test
             var output = Mustache.render(fullTemplate, data);
             var outputWithPartials = Mustache.render(baseTemplate, data, partials);
             Assert.AreEqual(outputWithPartials, output);
-        }    
+            Assert.AreEqual(output, "<h2>Names</h2>  <strong>Moe</strong>  <strong>Homer</strong>");
+        }
+        [Test]
+        public void SetDelimiter()
+        {
+            string contrivedExampleTemplate = @"* {{default_tags}}
+{{=<% %>=}}
+* <% erb_style_tags %>
+<%={{ }}=%>
+* {{ default_tags_again }}";
+
+            string expected = @"* han
+* shot
+* first";
+            dynamic data = Newtonsoft.Json.JsonConvert.DeserializeObject("{ 'default_tags': 'han', 'erb_style_tags': 'shot', default_tags_again: 'first'}");
+            var output = Mustache.render(contrivedExampleTemplate, data);
+            Assert.AreEqual(output, expected);
+        }
     }
 }

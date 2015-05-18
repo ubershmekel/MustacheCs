@@ -1,11 +1,11 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("mustache.cs.test")]
+[assembly: AssemblyTitle("Mustache.cs.test")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ubershmekel")]
-[assembly: AssemblyProduct("mustache.cs.test")]
+[assembly: AssemblyProduct("Mustache.cs.test")]
 [assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

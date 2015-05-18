@@ -35,8 +35,7 @@ namespace Mustache
         private static Regex tagRe = new Regex(@"#|\^|\/|>|\{|&|=|!");
 
 
-        public const string name = "mustache.cs";
-        public const string version = "2.0.0";
+        public const string name = "Mustache.cs";
         public static readonly Tags mustacheTags = new Tags{opener="{{", closer="}}"};
         
         /// <summary>

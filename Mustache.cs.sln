@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mustache.cs", "mustache.cs\mustache.cs.csproj", "{D71B378F-A4BA-4263-A4F0-07A49A0C528D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mustache.cs", "Mustache.cs\Mustache.cs.csproj", "{D71B378F-A4BA-4263-A4F0-07A49A0C528D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mustache.cs.test", "mustache.cs.test\mustache.cs.test.csproj", "{7F607362-0680-4751-B1DC-621219294AE3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mustache.cs.test", "Mustache.cs.test\Mustache.cs.test.csproj", "{7F607362-0680-4751-B1DC-621219294AE3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

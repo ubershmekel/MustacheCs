@@ -3,15 +3,15 @@
   <metadata>
     <id>$id$</id>
     <version>$version$</version>
-	<title>$title$</title>
+    <title>$title$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
-	<projectUrl>http://github.com/jehugaleahsa/mustache-sharp</projectUrl>
+    <projectUrl>https://github.com/ubershmekel/Mustache.cs</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <copyright>Copyright 2013</copyright>
+    <copyright></copyright>
     <tags>
-	mustache handlebars.js text generation building template
-	</tags>
+    mustache handlebars.js text generation building template mustache.js mustache.cs
+    </tags>
   </metadata>
 </package>

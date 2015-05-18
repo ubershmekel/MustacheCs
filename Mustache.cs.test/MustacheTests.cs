@@ -6,7 +6,7 @@ using NUnit.Framework;
 
 using RenderLambdaType = System.Func<string, System.Func<string, string>, string>;
 
-namespace Mustache.Test
+namespace Mustache.cs.Test
 {
     [TestFixture]
     public class MustacheTests

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Mustache
+namespace Mustache.cs
 {
     /// <summary>
     /// Parses a format string and returns a text generator.
@@ -37,13 +37,7 @@ namespace Mustache
 
         public const string name = "Mustache.cs";
         public static readonly Tags mustacheTags = new Tags{opener="{{", closer="}}"};
-        
-        /// <summary>
-        /// Initializes a new instance of a Mustache.
-        /// </summary>
-        public Mustache()
-        {
-        }
+
 
         private static bool isArray(Object obj) {
             return obj is IEnumerable<Object>;

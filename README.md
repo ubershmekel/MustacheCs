@@ -1,12 +1,12 @@
 # MustacheCs - C# logic-less {{mustache}} templates that are compatible with Mustache.js
 
-This is basically a port of [mustache.js](https://github.com/janl/mustache.js) to C#. It's important to use a compatible version if you want to template on both server and client side.
+This is a port of [mustache.js](https://github.com/janl/mustache.js) to C#. An implementation of an implementation of the [mustache](http://mustache.github.com/). A compatible version is useful if you want to template on both server and client side.
 
-> What could be more logical awesome than no logic at all?
+> Install [MustacheCs using NuGet package manager](https://www.nuget.org/packages/MustacheCs)
 
 [![Build Status](https://travis-ci.org/ubershmekel/MustacheCs.svg)](https://travis-ci.org/ubershmekel/MustacheCs)
 
-[mustache.js](http://github.com/janl/mustache.js) is an implementation of the [mustache](http://mustache.github.com/) template system in JavaScript.
+[mustache.js](http://github.com/janl/mustache.js) is  template system in JavaScript.
 
 [Mustache](http://mustache.github.io/) is a logic-less template syntax. It can be used for HTML, config files, source code - anything. It works by expanding tags in a template using values provided in a hash or object.
 

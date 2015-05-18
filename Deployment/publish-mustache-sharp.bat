@@ -1,4 +1,4 @@
-msbuild ../Mustache.cs.sln /p:Configuration=Release
-nuget pack ../Mustache.cs/Mustache.cs.csproj -Properties Configuration=Release
+msbuild ../MustacheCs.sln /p:Configuration=Release
+nuget pack ../MustacheCs/MustacheCs.csproj -Properties Configuration=Release
 nuget push *.nupkg
 del *.nupkg

@@ -1,8 +1,8 @@
 language: csharp
-solution: Mustache.cs.sln
+solution: MustacheCs.sln
 install:
-  - nuget restore Mustache.cs.sln
+  - nuget restore MustacheCs.sln
   - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
 script:
-  - xbuild /p:Configuration=Release Mustache.cs.sln
-  - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe ./Mustache.cs.test/bin/Release/Mustache.cs.test.dll
+  - xbuild /p:Configuration=Release MustacheCs.sln
+  - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe ./MustacheCs.test/bin/Release/MustacheCs.test.dll

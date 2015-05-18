@@ -6,12 +6,12 @@
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
-    <projectUrl>https://github.com/ubershmekel/Mustache.cs</projectUrl>
+    <projectUrl>https://github.com/ubershmekel/MustacheCs</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <copyright></copyright>
     <tags>
-    mustache handlebars.js text generation building template mustache.js mustache.cs
+    mustache handlebars.js text generation building template mustache.js MustacheCs mustache.cs
     </tags>
   </metadata>
 </package>

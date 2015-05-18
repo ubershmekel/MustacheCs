@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Mustache.cs
+namespace MustacheCs
 {
     /// <summary>
     /// Parses a format string and returns a text generator.
@@ -35,7 +35,7 @@ namespace Mustache.cs
         private static Regex tagRe = new Regex(@"#|\^|\/|>|\{|&|=|!");
 
 
-        public const string name = "Mustache.cs";
+        public const string name = "MustacheCs";
         public static readonly Tags mustacheTags = new Tags{opener="{{", closer="}}"};
 
 

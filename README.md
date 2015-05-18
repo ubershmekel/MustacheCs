@@ -1,10 +1,10 @@
-# Mustache.cs - Logic-less {{mustache}} templates with C# and compatible with Mustache.js
+# MustacheCs - Logic-less {{mustache}} templates with C# and compatible with Mustache.js
 
 This is basically a port of [mustache.js](https://github.com/janl/mustache.js) to C#. It's important to use a compatible version if you want to template on both server and client side.
 
 > What could be more logical awesome than no logic at all?
 
-[![Build Status](https://travis-ci.org/ubershmekel/Mustache.cs.svg)](https://travis-ci.org/ubershmekel/Mustache.cs)
+[![Build Status](https://travis-ci.org/ubershmekel/MustacheCs.svg)](https://travis-ci.org/ubershmekel/MustacheCs)
 
 [mustache.js](http://github.com/janl/mustache.js) is an implementation of the [mustache](http://mustache.github.com/) template system in JavaScript.
 
@@ -14,24 +14,24 @@ We call it "logic-less" because there are no if statements, else clauses, or for
 
 For a language-agnostic overview of mustache's template syntax, see the `mustache(5)` [manpage](http://mustache.github.com/mustache.5.html).
 
-## Where to use Mustache.cs?
+## Where to use MustacheCs?
 
-You can use Mustache.cs to render mustache templates anywhere you can use C#. Use mustache.js if you need browser-side rendering.
+You can use MustacheCs to render mustache templates anywhere you can use C#. Use mustache.js if you need browser-side rendering.
 
 
 ## Who uses mustache.js?
 
-An updated list of mustache.js users is kept [on the Github wiki](http://wiki.github.com/ubershmekel/Mustache.cs/who-uses). Add yourself or your company if you use Mustache.cs!
+An updated list of mustache.js users is kept [on the Github wiki](http://wiki.github.com/ubershmekel/MustacheCs/who-uses). Add yourself or your company if you use MustacheCs!
 
 ## Contributing
 
-Mustache.cs was born in 2015. You can help out! There is [plenty](https://github.com/ubershmekel/Mustache.cs/issues) of [work](https://github.com/ubershmekel/Mustache.cs/pulls) to do. No big commitment required, if all you do is review a single [Pull Request](https://github.com/ubershmekel/Mustache.cs/pulls), you are a maintainer. And a hero.
+MustacheCs was born in 2015. You can help out! There is [plenty](https://github.com/ubershmekel/MustacheCs/issues) of [work](https://github.com/ubershmekel/MustacheCs/pulls) to do. No big commitment required, if all you do is review a single [Pull Request](https://github.com/ubershmekel/MustacheCs/pulls), you are a maintainer. And a hero.
 
 ### Your First Contribution
 
-- review a [Pull Request](https://github.com/ubershmekel/Mustache.cs/pulls)
-- fix an [Issue](https://github.com/ubershmekel/Mustache.cs/issues)
-- update the [documentation](https://github.com/ubershmekel/Mustache.cs#usage)
+- review a [Pull Request](https://github.com/ubershmekel/MustacheCs/pulls)
+- fix an [Issue](https://github.com/ubershmekel/MustacheCs/issues)
+- update the [documentation](https://github.com/ubershmekel/MustacheCs#usage)
 - make a website
 - write a tutorial
 
@@ -39,7 +39,7 @@ Mustache.cs was born in 2015. You can help out! There is [plenty](https://github
 
 ## Usage
 
-Below is quick example how to use Mustache.cs:
+Below is quick example how to use MustacheCs:
 
 ```cs
 class view = {
@@ -56,7 +56,7 @@ In this example, the `Mustache.render` function takes two parameters: 1) the [mu
 
 
 --------------
-Below has not yet been converted from mustache.js to Mustache.cs
+Below has not yet been converted from mustache.js to MustacheCs
 --------------
 
 ## Templates

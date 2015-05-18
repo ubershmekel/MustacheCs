@@ -42,11 +42,13 @@ MustacheCs was born in 2015. You can help out! There is [plenty](https://github.
 Below is quick example how to use MustacheCs:
 
 ```cs
+using MustacheCs;
+
 class view = {
-  string title = "Joe";
-  string calc() {
-    return 2 + 4;
-  }
+    string title = "Joe";
+    string calc() {
+        return 2 + 4;
+    }
 }
 
 var output = Mustache.render("{{title}} spends {{calc}}", new view());

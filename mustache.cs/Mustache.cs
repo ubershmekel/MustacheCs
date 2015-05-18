@@ -47,18 +47,16 @@ namespace Mustache
         }
 
         private static bool isArray(Object obj) {
-            //return obj is System.Collections.IList;
             return obj is IEnumerable<Object>;
         }
 
         private static bool isEmptyArray(Object obj) {
-            if (obj is ICollection<Object>)
-                return ((ICollection<Object>)obj).Any();
-            return false;
-        }
-
-        private static bool isFunction(Object obj){
-            // TODO:
+            if (obj is IEnumerable<Object>) {
+                if ((obj as IEnumerable<Object>).Any())
+                    return false;
+                else
+                    return true;
+            }
             return false;
         }
 
@@ -662,7 +660,7 @@ namespace Mustache
                 if (partials == null)
                     return null;
 
-                var value = isFunction(partials) ? partialsInvoke(partials, token.value) : GetGenericValue(partials, token.value);
+                var value = GetGenericValue(partials, token.value);
                 if (value != null)
                     // TODO WHICH `parse`??
                     return renderTokens(parse((string)value), context, partials, (string)value);
@@ -718,9 +716,7 @@ namespace Mustache
         }
 
         // This is here for backwards compatibility with 0.4.x.,
-        /*eslint-disable */ // eslint wants camel cased function name
-        string to_html (string template, Object view, Object partials, Object send) {
-            /*eslint-enable*/
+        /*string to_html (string template, Object view, Object partials, Object send) {
 
             var result = render(template, view, partials);
 
@@ -733,7 +729,7 @@ namespace Mustache
             }
 
             return null;
-        }
+        }*/
 
         // Export the escaping function so that the user may override it.
         // See https://github.com/janl/mustache.js/issues/244

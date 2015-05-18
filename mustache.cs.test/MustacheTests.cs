@@ -149,5 +149,37 @@ namespace Mustache.Test
             var output = Mustache.render("{{#person?}}Hi {{name}}!{{/person?}}", data);
             Assert.AreEqual("Hi Jon!", output);
         }
+
+
+        [Test]
+        public void InvertedSection()
+        {
+            string template = @"{{#repo}}<b>{{name}}</b>{{/repo}}{{^repo}}No repos :({{/repo}}";
+            dynamic data = Newtonsoft.Json.JsonConvert.DeserializeObject("{ 'repo': []}");
+            var output = Mustache.render(template, data);
+            Assert.AreEqual("No repos :(", output);
+        }
+
+        [Test]
+        public void Comments()
+        {
+            string template = @"<h1>Today{{! ignore me }}.</h1>";
+            var output = Mustache.render(template, null);
+            Assert.AreEqual("<h1>Today.</h1>", output);
+        }
+
+        [Test]
+        public void Partials()
+        {
+            string baseTemplate = @"<h2>Names</h2>{{#names}}  {{> user}}{{/names}}";
+            var partials = new Dictionary<string,string>() {{"user" , "<strong>{{name}}</strong>"}};
+            string fullTemplate = "<h2>Names</h2>{{#names}}  <strong>{{name}}</strong>{{/names}}";
+
+            dynamic data = Newtonsoft.Json.JsonConvert.DeserializeObject("{ 'names': [{name: 'Moe'}, {name:'Homer'}]}");
+
+            var output = Mustache.render(fullTemplate, data);
+            var outputWithPartials = Mustache.render(baseTemplate, data, partials);
+            Assert.AreEqual(outputWithPartials, output);
+        }    
     }
 }

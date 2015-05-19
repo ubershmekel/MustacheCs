@@ -228,7 +228,7 @@ namespace MustacheCs.Test
             int tested = 0;
             int succeeded = 0;
             var failedList = new List<string>();
-            foreach (var specFileName in Directory.EnumerateFiles(solutionDir + @"\specs"))
+            foreach (var specFileName in Directory.EnumerateFiles(Path.Combine(solutionDir, "specs")))
             {
                 var basename = Path.GetFileName(specFileName);
                 if (basename.StartsWith("~") || !specFileName.EndsWith(".yml"))

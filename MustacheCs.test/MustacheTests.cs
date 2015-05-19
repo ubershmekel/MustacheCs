@@ -5,6 +5,8 @@ using System.Linq;
 using NUnit.Framework;
 
 using RenderLambdaType = System.Func<string, System.Func<string, string>, string>;
+using System.IO;
+using YamlDotNet.Serialization;
 
 namespace MustacheCs.Test
 {
@@ -183,6 +185,7 @@ namespace MustacheCs.Test
             Assert.AreEqual(outputWithPartials, output);
             Assert.AreEqual(output, "<h2>Names</h2>  <strong>Moe</strong>  <strong>Homer</strong>");
         }
+
         [Test]
         public void SetDelimiter()
         {
@@ -198,6 +201,54 @@ namespace MustacheCs.Test
             dynamic data = Newtonsoft.Json.JsonConvert.DeserializeObject("{ 'default_tags': 'han', 'erb_style_tags': 'shot', default_tags_again: 'first'}");
             var output = Mustache.render(contrivedExampleTemplate, data);
             Assert.AreEqual(output, expected);
+        }
+
+        private class YamlTest
+        {
+            public string name { get; set; }
+            public string desc { get; set; }
+            public object data { get; set; }
+            public string template {get;set;}
+            public string expected { get; set; }
+            public Dictionary<string, string> partials { get; set; }
+        }
+
+        private class YamlDoc
+        {
+            public string overview { get; set; }
+            public List<YamlTest> tests { get; set; }
+        }
+
+        [Test]
+        public void TestSpecs()
+        {
+            // See https://github.com/mustache/spec
+
+            var solutionDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+            int tested = 0;
+            int succeeded = 0;
+            var failedList = new List<string>();
+            foreach (var specFileName in Directory.EnumerateFiles(solutionDir + @"\specs"))
+            {
+                var basename = Path.GetFileName(specFileName);
+                if (basename.StartsWith("~") || !specFileName.EndsWith(".yml"))
+                    continue;
+                var text = System.IO.File.ReadAllText(specFileName);
+                var deserializer = new Deserializer();
+                var yamldoc = deserializer.Deserialize <YamlDoc> (new StringReader(text));
+                foreach (var test in yamldoc.tests)
+                {
+                    tested += 1;
+                    //dynamic data = Newtonsoft.Json.JsonConvert.DeserializeObject(test.data);
+                    var output = Mustache.render(test.template, test.data, test.partials);
+                    if (output == test.expected)
+                        succeeded += 1;
+                    else
+                        failedList.Add(basename + " - " + test.name);
+                }
+            }
+            Console.WriteLine("Succeeded in {0}/{1} tests", succeeded, tested);
+            Assert.IsEmpty(failedList);
         }
     }
 }

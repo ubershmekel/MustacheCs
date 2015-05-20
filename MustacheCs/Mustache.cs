@@ -279,6 +279,7 @@ namespace MustacheCs
                     compileTags(new Tags{opener=newTags[0], closer=newTags[1]});
                 }
             }
+            stripSpace();
 
             // Make sure there are no open sections when we're done.
             if (sections.Count() > 0) {
@@ -615,7 +616,8 @@ namespace MustacheCs
                 {
                     buffer += this.renderTokens(token.subTokens, context.push(value), partials, originalTemplate);
                 } else if(isArray(value)) {
-                    foreach (var item in (System.Collections.IList)value) {
+                    foreach (var item in (IEnumerable<Object>)value)
+                    {
                         buffer += this.renderTokens(token.subTokens, context.push(item), partials, originalTemplate);
                     }
                 //} else if (typeof value === 'object' || typeof value === 'string' || typeof value === 'number') {
@@ -663,7 +665,7 @@ namespace MustacheCs
             string unescapedValue (Token token, Context context) {
                 var value = context.lookup(token.value);
                 if (value != null)
-                    return (string)value;
+                    return value.ToString();
                 return null;
             }
 
